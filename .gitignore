@@ -1,0 +1,43 @@
+# --- Entorno y Sistema ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.DS_Store
+Thumbs.db
+*.log
+
+# --- FrontEnd (Node/React/Vite) ---
+**/node_modules/
+**/dist/
+**/build/
+**/.vite/
+**/.vite-temp/
+.eslintcache
+
+# --- BackEnd (Python) ---
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/.pytest_cache/
+**/.venv/
+**/env/
+**/venv/
+**/ENV/
+.python-version
+
+# --- Datos y Notebooks (Si aplicara por Kaggle/M5) ---
+*.csv
+*.json
+!package.json
+!package-lock.json
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# --- Archivos de documentación temporal ---
+listado.txt
