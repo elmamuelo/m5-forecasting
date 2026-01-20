@@ -14,9 +14,13 @@ class PredictRequest(BaseModel):
 
 app = FastAPI(title="M5 Forecasting API")
 
+origins = [
+    "http://localhost:5173",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # En producción, usa la URL específica de tu frontend
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
