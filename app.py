@@ -50,6 +50,29 @@ numeric_features = [
 def health_check():
     return {"status": "online", "project": "M5-Forecasting"}
 
+@app.get("/items")
+def get_items():
+    """Obtiene la lista de artículos únicos para el select del frontend"""
+    query = text("SELECT DISTINCT item_id FROM items ORDER BY item_id ASC")
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(query)
+            # Retornamos una lista simple de IDs
+            return [row[0] for row in result]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/stores")
+def get_stores():
+    """Obtiene la lista de tiendas únicas"""
+    query = text("SELECT DISTINCT store_id FROM stores ORDER BY store_id ASC")
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(query)
+            return [row[0] for row in result]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/predict")
 def predict(request: PredictRequest):
     query = text("""

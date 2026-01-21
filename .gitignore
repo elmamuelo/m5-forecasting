@@ -1,14 +1,16 @@
-# --- Entorno y Sistema ---
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.DS_Store
-Thumbs.db
-*.log
+# --- Entornos Virtuales (Python) ---
+# Ignora las carpetas que mencionaste y los nombres estándar
+Scripts/
+include/
+Lib/
+share/
+bin/
+venv/
+.venv/
+env/
+ENV/
 
-# --- FrontEnd (Node/React/Vite) ---
+# --- FrontEnd (React/Vite) ---
 **/node_modules/
 **/dist/
 **/build/
@@ -16,17 +18,26 @@ Thumbs.db
 **/.vite-temp/
 .eslintcache
 
-# --- BackEnd (Python) ---
+# --- BackEnd / Python Caché ---
 **/__pycache__/
 **/*.py[cod]
 **/*$py.class
 **/.pytest_cache/
-**/.venv/
-**/env/
-**/venv/
-**/ENV/
-.python-version
 
+# --- Configuración y Secretos ---
+.env
+.env.*
+!.env.example
+
+# --- Archivos del Sistema e IDEs ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
+# --- Otros ---
+listado.txt
 # --- Datos y Notebooks (Si aplicara por Kaggle/M5) ---
 *.csv
 *.json
@@ -38,6 +49,3 @@ Thumbs.db
 .idea/
 *.sublime-project
 *.sublime-workspace
-
-# --- Archivos de documentación temporal ---
-listado.txt

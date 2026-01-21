@@ -1,12 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Calendar, Store, Tag, Play, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 const ForecastUI = () => {
   const [formData, setFormData] = useState({ item_id: '', store_id: '', date: '' });
+  const [items, setItems] = useState([]); 
+  const [stores, setStores] = useState([]);
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const [itemsRes, storesRes] = await Promise.all([
+          fetch('http://127.0.0.1:8000/items'),
+          fetch('http://127.0.0.1:8000/stores')
+        ]);
+        const itemsData = await itemsRes.json();
+        const storesData = await storesRes.json();
+        
+        setItems(itemsData);
+        setStores(storesData);
+        
+        // Establecer valores por defecto para que no estén vacíos
+        if (itemsData.length > 0) setFormData(prev => ({ ...prev, item_id: itemsData[0] }));
+        if (storesData.length > 0) setFormData(prev => ({ ...prev, store_id: storesData[0] }));
+      } catch (err) {
+        console.error("Error cargando opciones:", err);
+      }
+    };
+    fetchOptions();
+  }, []);
+  
   const handlePredict = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -30,7 +55,6 @@ const ForecastUI = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 font-sans">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
-        {/* Header */}
         <div className="bg-blue-600 p-6 text-white">
           <div className="flex items-center gap-3 mb-2">
             <LineChart size={28} />
@@ -39,33 +63,38 @@ const ForecastUI = () => {
           <p className="text-blue-100 text-sm">Pronóstico de demanda basado en LightGBM</p>
         </div>
 
-        {/* Formulario */}
         <form onSubmit={handlePredict} className="p-6 space-y-5">
           <div className="space-y-4">
-            <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1">
-                <Tag size={16} /> ID del Artículo
+            <div className="flex flex-col gap-1.5">
+              <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+                <Tag size={16} className="text-blue-600" />
+                Seleccionar Artículo
               </label>
-              <input
-                type="text"
-                placeholder="Ej: HOBBIES_1_001"
-                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              <select 
+                value={formData.item_id}
                 onChange={(e) => setFormData({...formData, item_id: e.target.value})}
-                required
-              />
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
+              >
+                {items.map(item => (
+                  <option key={item} value={item}>{item}</option>
+                ))}
+              </select>
             </div>
 
-            <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1">
-                <Store size={16} /> ID de la Tienda
+            <div className="flex flex-col gap-1.5">
+              <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+                <Store size={16} className="text-blue-600" />
+                Seleccionar Tienda
               </label>
-              <input
-                type="text"
-                placeholder="Ej: CA_1"
-                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              <select 
+                value={formData.store_id}
                 onChange={(e) => setFormData({...formData, store_id: e.target.value})}
-                required
-              />
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
+              >
+                {stores.map(store => (
+                  <option key={store} value={store}>{store}</option>
+                ))}
+              </select>
             </div>
 
             <div>
